@@ -24,7 +24,8 @@
       <br>     
       <input type="submit" value="Create">
       </form>
-  <h3>Add new ticket</h3>
+
+  <h3 v-if="usrrl =='ADMIN'">Add new ticket</h3>
   <form id="ticket-form" v-on:submit="addTicket" v-if="usrrl =='ADMIN'">
   <label for="compSelect">Choose a company: </label>
   <select v-model="selectedCompany" required>
@@ -54,6 +55,7 @@ import UsersTable from '../components/UsersTable.vue'
 import axios from 'axios'
 import $ from 'jquery'
 import moment from 'moment'
+import UserClient from '../clients/user-client.js'
 
 export default {
   name: 'home',
@@ -153,7 +155,10 @@ export default {
             console.log(JSON.parse(JSON.stringify(response.data)));
             // Status code
             console.log(JSON.parse(JSON.stringify(response.status)));
-
+            // novo
+            UserClient.loadUsers(this);
+            // novo
+        
           }, (error) => {
             console.log("An error occured:");
             console.log(error);

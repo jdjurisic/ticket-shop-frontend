@@ -63,8 +63,7 @@ export default {
       console.log(tick);
         
       axios.defaults.headers.common['Authorization'] = "Bearer "+window.localStorage.getItem('jwt');
-      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-      axios.delete('http://localhost:8080/airline-ticket-shop-backend/api/flight/tickets',{ data: tick }).then((response) => {
+      axios.delete('http://localhost:8080/airline-ticket-shop-backend/api/flights/tickets',{ data: tick }).then((response) => {
             // Podaci sa servera
             console.log(JSON.parse(JSON.stringify(response.data)));
             // Status code
