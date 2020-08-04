@@ -27,6 +27,7 @@
           <td>{{ user.departureDate | dateFormat('DD MMM YYYY h:mm:ss a')}}</td>
           <td>{{ user.returnDate | dateFormat('DD MMM YYYY h:mm:ss a')}}</td>
           <button v-if="usrrl =='ADMIN'"  @click="deleteTicket(user.flightId, user.ticketId)">Delete</button>
+          <button v-if="usrrl !='ADMIN'"  @click="reserveTicket(user)">Reserve</button>
         </tr>
     </tbody>
 </table>
@@ -36,6 +37,7 @@
 import UserClient from '../clients/user-client.js'
 import moment from 'moment'
 import axios from 'axios'
+import { eventBus } from '../main.js'
 export default {
     name: "UsersTable",
     computed:{
@@ -74,7 +76,54 @@ export default {
           });
 
     return false;
-        }
+        },
+    reserveTicket(user){
+      console.log(user);
+      let booking;
+      if(user.oneway){
+       booking ={"ticketId":user.ticketId,
+      "company":user.company,
+      "oneway":user.oneway,
+      "departureDate":user.departureDate,
+      "flightId":user.flightId,
+      "count":user.count,
+      "destCity":user.destCity,
+      "depCity":user.depCity
+      }
+      
+      }else{
+      booking = {"ticketId":user.ticketId,
+      "company":user.company,
+      "oneway":user.oneway,
+      "departureDate":user.departureDate,
+      "flightId":user.flightId,
+      "count":user.count,
+      "destCity":user.destCity,
+      "depCity":user.depCity,
+      "returnDate":user.returnDate
+      }
+       
+      }
+      
+      console.log(booking);
+
+      axios.post('http://localhost:8080/airline-ticket-shop-backend/api/users/reservations/'+window.localStorage.getItem("usrnme"),booking)
+          .then((response) => {
+            // Podaci sa servera
+            console.log(JSON.parse(JSON.stringify(response.data)));
+            // Status code
+            console.log(JSON.parse(JSON.stringify(response.status)));
+            if(JSON.parse(JSON.stringify(response.status)) == 200){
+              eventBus.$emit('ticketBooked');
+              this.loadUsers();
+            }
+          }, (error) => {
+            console.log("An error occured:");
+            console.log(error);
+          });
+      
+
+    }
     },  
     // Za automatsko ucitavanje korisnika
     created() {

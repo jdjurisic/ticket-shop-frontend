@@ -50,6 +50,7 @@ let UserClient = {
           }, (error) => {
             console.log("An error occured:");
             console.log(error);
+            alert("Login Error -  Wrong Username/Password")
           });
       }
 }

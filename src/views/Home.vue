@@ -3,15 +3,16 @@
     <label>JWT Token: {{jwt}} </label><br>
     <label>Username: {{usrname}}</label><br>
     <label>Role: {{usrrl}}</label> <br>
-    <label v-if="rserve">Bookings: {{rserve}}</label><br>   
-      <router-link to="/login">Logout</router-link> 
-      <!-- v-bind child komponenti prosledjuje podatke iz parent komponente -->
+    <label v-if="rserve" v-bind:noReser="noReser" >Bookings: {{noReser}}</label><br>   
+      <router-link @click.native="logoutf" to="/login">Logout</router-link> 
+      
 <br><br>
 <button id="all"> All tickets</button>
 <button id="round"> Roundtrip tickets</button>
 <button id="one"> Oneway tickets</button>
       <UsersTable v-if="this.users" v-bind:users="this.users"/>
       <br>
+        <h3 v-if="usrrl =='ADMIN'">Add new user</h3>
       <form v-on:submit="addUser" v-if="usrrl =='ADMIN'">
         <div class="form-group">
         <label>Username:</label>
@@ -31,19 +32,24 @@
   <select v-model="selectedCompany" required>
       <option v-bind:name="compCombo.name" v-for="item in compCombo" v-bind:key="item.name">{{item.name}}</option>
   </select>
+  <br><br>
   <label for="compSelect">Choose a flight: </label>
   <select v-model="selectedFlightId" required>
       <option v-for="item in fligCombo" v-bind:key="item.id" v-bind:value="{ id: item.id }">{{item.origin + "-"+item.destination}}</option>
   </select>
+  <br><br>
   <div id="checkID">
   <input v-model="selectedOneway" type="checkbox" id="onewayid" name="oneWay" value="true">
-  <label for="onewayid"> One way ticket</label><br>
+  <label for="onewayid"> One way ticket</label><br><br>
   </div>
   <label for="departureDate">Departure date:</label><br>
-  <input v-model="selectedDepDate" type="datetime-local" id="departureDate" name="departureDate" required><br>
+  <input v-model="selectedDepDate" type="datetime-local" id="departureDate" name="departureDate" required>
+  <br><br>
   <label for="returnDate">Return date:</label><br>
-  <input v-model="selectedRetDate" type="datetime-local" id="returnDate" name="returnDate" ><br>
-  <input v-model="selectedCount" placeholder="Number of tickets">
+  <input v-model="selectedRetDate" type="datetime-local" id="returnDate" name="returnDate" ><br><br>
+  <label>Number of tickets </label>
+  <input v-model="selectedCount">
+  <br><br>
     <input type="submit" value="Submit">
   </form>
   
@@ -56,6 +62,7 @@ import axios from 'axios'
 import $ from 'jquery'
 import moment from 'moment'
 import UserClient from '../clients/user-client.js'
+import { eventBus } from '../main'
 
 export default {
   name: 'home',
@@ -95,9 +102,9 @@ export default {
       selectedCount:0,
       selectedOneway:false,
       selectedRetDate:"",
-      selectedDepDate:""
+      selectedDepDate:"",
 
-
+      noReser:0
 
     }
   },
@@ -172,6 +179,12 @@ export default {
       this.selectedDepDate="";
       this.UsersTable.$forceUpdate();
       return false;
+    },
+     logoutf(){
+       window.localStorage.clear();
+
+
+
     }
   },
   mounted(){
@@ -215,7 +228,13 @@ axios.get("http://localhost:8080/airline-ticket-shop-backend/api/companies", {
         }, (error) => {
           console.log("An error occured:");
           console.log(error);
-        });  
+        });
+
+  this.noReser = parseInt(window.localStorage.getItem("rserve"));
+  
+  eventBus.$on('ticketBooked',()=>{
+      this.noReser++;
+    });   
   }
   
 }

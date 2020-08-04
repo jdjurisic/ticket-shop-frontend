@@ -14,7 +14,10 @@ Vue.config.productionTip = false
  * Prosledili smo komponentu koju zelimo da renderujemo nakon sto smo je importovali na liniji 2. 
  * Komponenta ce biti renderovana na mestu HTML elementa sa id-jem id='app'.
  */ 
+export const eventBus = new Vue();
+
 new Vue({
   router, // router u drugim komponentama dohvatamo pomocu this.$router
   render: h => h(App),
 }).$mount('#app')
+
