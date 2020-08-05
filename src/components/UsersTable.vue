@@ -28,6 +28,7 @@
           <td>{{ user.returnDate | dateFormat('DD MMM YYYY h:mm:ss a')}}</td>
           <button v-if="usrrl =='ADMIN'"  @click="deleteTicket(user.flightId, user.ticketId)">Delete</button>
           <button v-if="usrrl !='ADMIN'"  @click="reserveTicket(user)">Reserve</button>
+          <router-link :to="/edit/+user.ticketId" tag="button"><a>Edit</a></router-link>
         </tr>
     </tbody>
 </table>
