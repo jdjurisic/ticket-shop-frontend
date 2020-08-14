@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home'
 import Login from '../views/Login'
 import Edit from '../views/Edit'
+import Company from '../views/Company'
 
 Vue.use(VueRouter);
 
@@ -27,13 +28,24 @@ let router = new VueRouter({
         }
       },
     {
-      path:'/edit/:id',
+      path:'/edit/:fid/:tid',
       name:'edit',
       component:Edit,
+      props: { default: true, sidebar: false },
       meta:{
         requiresAuth:true
       }
-    }]
+    },
+    {
+      path:'/company/:name',
+      name:'company',
+      component:Company,
+      props: { default: true, sidebar: false },
+      meta:{
+        requiresAuth:true
+      }
+    }
+    ]
   })
   
   export default router

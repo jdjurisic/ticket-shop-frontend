@@ -52,6 +52,21 @@ let UserClient = {
             console.log(error);
             alert("Login Error -  Wrong Username/Password")
           });
+      },
+      loadCompanyTicket(comp,companyName){
+        axios.get("http://localhost:8080/airline-ticket-shop-backend/api/companies/"+companyName, {
+          headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.jwt
+            },
+        }).then((response) => {
+          // Pregazimo korisnike u Home komponenti
+          comp.users = JSON.parse(JSON.stringify(response.data));          
+        }, (error) => {
+          console.log("An error occured:");
+          console.log(error);
+        });
       }
 }
 

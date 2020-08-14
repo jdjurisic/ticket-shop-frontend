@@ -21,14 +21,14 @@
         <tr v-bind:key="user.id" v-for="user in users">
           <td>{{ user.depCity }}</td>
           <td>{{ user.destCity }}</td>
-          <td>{{ user.company }}</td>
+          <router-link :to="/company/+user.company"> <td>{{ user.company }}</td> </router-link>
           <td>{{ user.count }}</td>
           <td>{{ user.oneway }}</td>
           <td>{{ user.departureDate | dateFormat('DD MMM YYYY h:mm:ss a')}}</td>
           <td>{{ user.returnDate | dateFormat('DD MMM YYYY h:mm:ss a')}}</td>
           <button v-if="usrrl =='ADMIN'"  @click="deleteTicket(user.flightId, user.ticketId)">Delete</button>
           <button v-if="usrrl !='ADMIN'"  @click="reserveTicket(user)">Reserve</button>
-          <router-link :to="/edit/+user.ticketId" tag="button"><a>Edit</a></router-link>
+          <router-link v-if="usrrl =='ADMIN'" :to="/edit/+user.flightId+'/'+user.ticketId" tag="button">Edit</router-link>
         </tr>
     </tbody>
 </table>
@@ -128,9 +128,9 @@ export default {
     },  
     // Za automatsko ucitavanje korisnika
     created() {
-    if(window.localStorage.getItem('jwt') != undefined){
-        this.loadUsers()
-      }
+    // if(window.localStorage.getItem('jwt') != undefined){
+    //     this.loadUsers()
+    //   }
   },
 /* props: To su promenljive koje ova komponenta moze da primi od strane drugih komponenti.
   Ovoj komponenti je prosledjena lista korisnika koristeci v-bind:users od strane Home.vue komponente. 
@@ -138,7 +138,7 @@ export default {
   props: ['users'],
   filters: {
     dateFormat: function (value, format) {
-        var dt = new Date(parseInt(value));
+    var dt = new Date(parseInt(value));
 		var parsed = moment(dt);
 		return parsed.format(format);
 	}

@@ -4,7 +4,7 @@
     <label>Username: {{usrname}}</label><br>
     <label>Role: {{usrrl}}</label> <br>
     <label v-if="rserve" v-bind:noReser="noReser" >Bookings: {{noReser}}</label><br>   
-      <router-link @click.native="logoutf" to="/login">Logout</router-link> 
+    <router-link @click.native="logoutf" to="/login">Logout</router-link> 
       
 <br><br>
 <button id="all"> All tickets</button>
@@ -12,18 +12,21 @@
 <button id="one"> Oneway tickets</button>
       <UsersTable v-if="this.users" v-bind:users="this.users"/>
       <br>
+      <hr>
         <h3 v-if="usrrl =='ADMIN'">Add new user</h3>
       <form v-on:submit="addUser" v-if="usrrl =='ADMIN'">
         <div class="form-group">
-        <label>Username:</label>
+        <label> Username:</label>
         <input type="text" v-model="regUsername" required>        
-        <label>Password:</label>
+        <label> Password:</label>
         <input type="text" v-model="regPassword" required>   
-        <label>Role:</label>
+        <label> Role:</label>
         <input type="text" v-model="regRole" required>           
       </div>     
       <br>     
+      <hr>
       <input type="submit" value="Create">
+
       </form>
 
   <h3 v-if="usrrl =='ADMIN'">Add new ticket</h3>
@@ -50,8 +53,10 @@
   <label>Number of tickets </label>
   <input v-model="selectedCount">
   <br><br>
-    <input type="submit" value="Submit">
+  <input type="submit" value="Submit">
+  <hr>
   </form>
+
   
 
   </div>
@@ -177,14 +182,10 @@ export default {
       this.selectedOneway=false;
       this.selectedRetDate="";
       this.selectedDepDate="";
-      this.UsersTable.$forceUpdate();
       return false;
     },
-     logoutf(){
-       window.localStorage.clear();
-
-
-
+    logoutf(){
+    window.localStorage.clear();
     }
   },
   mounted(){
@@ -233,8 +234,14 @@ axios.get("http://localhost:8080/airline-ticket-shop-backend/api/companies", {
   this.noReser = parseInt(window.localStorage.getItem("rserve"));
   
   eventBus.$on('ticketBooked',()=>{
-      this.noReser++;
-    });   
+  this.noReser++;
+  window.localStorage.setItem("rserve",this.noReser);
+  });   
+  
+  if(window.localStorage.getItem('jwt') != undefined){
+  UserClient.loadUsers(this);
+  }
+
   }
   
 }
