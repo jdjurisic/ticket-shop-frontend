@@ -4,6 +4,7 @@ import Home from '../views/Home'
 import Login from '../views/Login'
 import Edit from '../views/Edit'
 import Company from '../views/Company'
+import Reservations from '../views/Reservations'
 
 Vue.use(VueRouter);
 
@@ -40,6 +41,15 @@ let router = new VueRouter({
       path:'/company/:name',
       name:'company',
       component:Company,
+      props: { default: true, sidebar: false },
+      meta:{
+        requiresAuth:true
+      }
+    },
+    {
+      path:'/reservations',
+      name:'reservations',
+      component:Reservations,
       props: { default: true, sidebar: false },
       meta:{
         requiresAuth:true

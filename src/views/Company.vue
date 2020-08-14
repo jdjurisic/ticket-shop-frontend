@@ -5,32 +5,30 @@
     <label>Role: {{usrrl}}</label> <br>
     <label v-if="rserve" v-bind:noReser="noReser" >Bookings: {{noReser}}</label><br>   
     <router-link @click.native="logoutf" to="/login">Logout</router-link> 
-    <br><br>
+    <br>
     <router-link to="/">Home</router-link> 
     <hr>
     <h2>{{companyName}}</h2>
 
     <UsersTable v-if="this.users" v-bind:users="this.users"/>
     <hr>
+    <div v-if="usrrl == 'ADMIN'">
     <button @click="deleteCmpny">Delete company</button>
-    <br><br>
+    <hr>
     <label>Create new company</label>
-    <br><br>
-    <form v-on:submit="addCompany" v-if="usrrl == 'ADMIN'">
+    <form v-on:submit="addCompany">
     <div class="form-group">
-    <label> Enter company name: </label>
     <input type="text" v-model="newCmpName" required>  
     <input type="submit" value="Create">
     </div>    
     </form>
-    
+    <hr>
     <label>Rename selected company</label>
-    <br><br>
-    <form v-on:submit="editCompany" v-if="usrrl == 'ADMIN'">
+    <form v-on:submit="editCompany" >
       <input type="text" v-model="editCmpName" required>
       <input type="submit" value="Rename">
       </form>
-
+    </div>
 
 
 
