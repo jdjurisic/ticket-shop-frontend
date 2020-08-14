@@ -13,15 +13,25 @@
     <UsersTable v-if="this.users" v-bind:users="this.users"/>
     <hr>
     <button @click="deleteCmpny">Delete company</button>
-    <br>
-
+    <br><br>
+    <label>Create new company</label>
+    <br><br>
     <form v-on:submit="addCompany" v-if="usrrl == 'ADMIN'">
     <div class="form-group">
-    <label> Enter company name:</label>
+    <label> Enter company name: </label>
     <input type="text" v-model="newCmpName" required>  
     <input type="submit" value="Create">
     </div>    
     </form>
+    
+    <label>Rename selected company</label>
+    <br><br>
+    <form v-on:submit="editCompany" v-if="usrrl == 'ADMIN'">
+      <input type="text" v-model="editCmpName" required>
+      <input type="submit" value="Rename">
+      </form>
+
+
 
 
     </div>
@@ -45,11 +55,13 @@ export default {
           companyName: this.$route.params.name,
           noReser:0,
           newCmpName:"",
+          editCmpName:""
 
         }
     },
     methods:{
-    deleteCmpny(){
+    deleteCmpny(e){
+        e.preventDefault();
         console.log(this.companyName);
         axios.delete("http://localhost:8080/airline-ticket-shop-backend/api/companies/"+this.companyName, {
           headers: {
@@ -69,7 +81,7 @@ export default {
     },
     addCompany(e){
       e.preventDefault();
-      const newCmp ={newCompany:this.newCmpName}
+      const newCmp ={newCompany:this.newCmpName};
       if(this.newCmpName.length > 0){
             axios.post("http://localhost:8080/airline-ticket-shop-backend/api/companies",newCmp).then(() => {
           this.$router.push({name: 'home'});
@@ -80,7 +92,20 @@ export default {
       }else alert("Enter company name!");
         
 
-      }
+      },
+    editCompany(e){
+      e.preventDefault();
+      if(this.editCmpName.length >0){
+        const edited ={newCompany:this.editCmpName};
+        axios.put("http://localhost:8080/airline-ticket-shop-backend/api/companies/"+this.companyName,edited).then(() =>{
+          this.$router.push({name: 'home'});
+        },(error) => {
+          console.log("An error occured:");
+          console.log(error);
+        });
+      }else alert("Enter company name!");
+
+    }
     },
       computed: {
     jwt(){
