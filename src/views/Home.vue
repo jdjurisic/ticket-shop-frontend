@@ -58,7 +58,25 @@
   <hr>
   </form>
 
-  
+  <div v-if="usrrl =='USER'">
+  <form v-on:submit="searchTicketsBy">
+      <div class="form-group">
+      <label> Origin:</label>
+      <input type="text" v-model="searchOrigin" >        
+      <label> Destination:</label>
+      <input type="text" v-model="searchDestination" ><br><br>  
+      <label >Departure date:</label><br>
+      <input v-model="searchDepartureDate" type="datetime-local">
+      <br><br>
+      <label>Return date:</label><br>
+      <input v-model="searchReturnDate" type="datetime-local"><br>
+        
+      </div> 
+      <br>
+    <input type="submit" value="Search"> 
+  </form>
+  <UsersTable v-show="searchPerformed" v-bind:users="this.searchedTickets"/>
+  </div>
 
   </div>
 </template>
@@ -110,7 +128,13 @@ export default {
       selectedRetDate:"",
       selectedDepDate:"",
 
-      noReser:0
+      noReser:0,
+      searchedTickets:[],
+      searchOrigin:"",
+      searchDestination:"",
+      searchPerformed:false,
+      searchDepartureDate:"",
+      searchReturnDate:"",
 
     }
   },
@@ -187,6 +211,34 @@ export default {
     },
     logoutf(){
     window.localStorage.clear();
+    },
+    searchTicketsBy(e){
+      e.preventDefault();
+      var objekat = {};
+      if(this.searchDestination.length>0)objekat.destination = this.searchDestination;
+      if(this.searchOrigin.length>0)objekat.origin = this.searchOrigin;
+
+      var dt = new Date(this.searchDepartureDate);
+      var parsed = moment(dt);
+      let depTime = parsed.format('x');
+      if(this.searchDepartureDate)objekat.depDate = depTime;
+
+      var rt = new Date(this.searchReturnDate);
+      var parsed1 = moment(rt);
+      let retTime = parsed1.format('x');
+      if(this.searchReturnDate)objekat.retDate = retTime;
+
+      
+      console.log(objekat);
+
+      axios.get("http://localhost:8080/airline-ticket-shop-backend/api/flights/query",{
+        params:objekat
+      }).then((response)=>{
+        this.searchedTickets = JSON.parse(JSON.stringify(response.data));
+        this.searchPerformed = true;
+      },(error)=>{
+        console.log(error);
+      });
     }
   },
   mounted(){
