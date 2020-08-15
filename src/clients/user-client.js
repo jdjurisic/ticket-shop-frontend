@@ -25,12 +25,11 @@ let UserClient = {
         password: password
       }).then((response) => {
             // Podaci sa servera
-            console.log(JSON.parse(JSON.stringify(response.data)));
+            //console.log(JSON.parse(JSON.stringify(response.data)));
             // Status code
             let uloga = JSON.parse(JSON.stringify(response.data)).role;
             let usrname = JSON.parse(JSON.stringify(response.data)).username;
 
-            console.log();
             window.localStorage.setItem('rserve', "");  
             window.localStorage.setItem('usrnme', usrname);
             window.localStorage.setItem('usrrl', uloga);
@@ -67,6 +66,17 @@ let UserClient = {
           console.log("An error occured:");
           console.log(error);
         });
+      },
+      
+      loadPage(comp,page){  
+        axios.get("http://localhost:8080/airline-ticket-shop-backend/api/flights/ticketpage",{
+          params:{"page":page}
+          }).then((response) => {
+            comp.users = JSON.parse(JSON.stringify(response.data.data));        
+          }, (error) => {
+            console.log("An error occured:");
+            console.log(error);
+          });
       }
 }
 

@@ -19,6 +19,7 @@
             <th>Oneway</th>
             <th>Departure Date</th>
             <th>Return Date</th>
+            <th>Available</th>
         </tr>
     </thead>
     <tbody>

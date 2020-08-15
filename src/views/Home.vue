@@ -13,6 +13,10 @@
 <button id="one"> Oneway tickets</button>
       <UsersTable v-if="this.users" v-bind:users="this.users"/>
       <br>
+      <button @click="prevPage" >&larr; Prev</button>
+      {{page}}
+      <button @click="nextPage">Next &rarr;</button>
+      <br>
       <hr>
         <h3 v-if="usrrl =='ADMIN'">Add new user</h3>
       <form v-on:submit="addUser" v-if="usrrl =='ADMIN'">
@@ -136,6 +140,9 @@ export default {
       searchDepartureDate:"",
       searchReturnDate:"",
 
+      page:0,
+      maxpage:0
+
     }
   },
   methods:{
@@ -239,22 +246,32 @@ export default {
       },(error)=>{
         console.log(error);
       });
+    },
+    prevPage(){
+      if(this.page == 0)return;
+      this.page--;
+      UserClient.loadPage(this,this.page);
+    },
+    nextPage(){
+      if(this.page == this.maxpage)return;
+      this.page++;
+      UserClient.loadPage(this,this.page);
     }
   },
   mounted(){
-      $('#round').click(function() {
+    $('#round').click(function() {
     $('td').parent().show();
     $('td:contains("true")').parent().hide();
-  });
+    });
 
-$('#one').click(function() {
+    $('#one').click(function() {
     $('td').parent().show();
     $('td:contains("false")').parent().hide();
-  });
+    });
 
-$('#all').click(function() {
+    $('#all').click(function() {
     $('td').parent().show();
-  });
+    });
 
 axios.get("http://localhost:8080/airline-ticket-shop-backend/api/companies", {
           headers: {
@@ -292,8 +309,15 @@ axios.get("http://localhost:8080/airline-ticket-shop-backend/api/companies", {
   });   
   
   if(window.localStorage.getItem('jwt') != undefined){
-  UserClient.loadUsers(this);
+  UserClient.loadPage(this,this.page);
   }
+
+  axios.get("http://localhost:8080/airline-ticket-shop-backend/api/flights/maxticketpage").then((response)=>{
+    this.maxpage = JSON.parse(response.data);
+    console.log(this.maxpage);
+  },(error)=>{
+    console.log(error);
+  });
 
   }
   
