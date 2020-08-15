@@ -2,8 +2,9 @@
   <div class="home">
     <label>JWT Token: {{jwt}} </label><br>
     <label>Username: {{usrname}}</label><br>
-    <label>Role: {{usrrl}}</label> <br>
-    <label v-if="rserve" v-bind:noReser="noReser" >Bookings: {{noReser}}</label><br>   
+    <label>Role: {{usrrl}}</label> <br><br>
+    <router-link to="/reservations"><label v-if="rserve" v-bind:noReser="noReser" >Bookings: {{noReser}}</label></router-link>
+    <br>   
     <router-link @click.native="logoutf" to="/login">Logout</router-link> 
       
 <br><br>
