@@ -71,6 +71,7 @@ export default {
             console.log(JSON.parse(JSON.stringify(response.data)));
             // Status code
             console.log(JSON.parse(JSON.stringify(response.status)));
+            this.users = this.users.filter( usr => usr.flightId != flgId && usr.ticketId != tickId);
           }, (error) => {
             console.log("An error occured:");
             console.log(error);

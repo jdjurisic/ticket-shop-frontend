@@ -200,7 +200,7 @@ export default {
             // Status code
             console.log(JSON.parse(JSON.stringify(response.status)));
             // novo
-            UserClient.loadUsers(this);
+            UserClient.loadPage(this,this.page);
             // novo
         
           }, (error) => {
@@ -273,12 +273,12 @@ export default {
     $('td').parent().show();
     });
 
-axios.get("http://localhost:8080/airline-ticket-shop-backend/api/companies", {
-          headers: {
-              "Accept": "application/json",
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + localStorage.jwt
-            },
+    axios.get("http://localhost:8080/airline-ticket-shop-backend/api/companies", {
+      headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.jwt
+          },
         }).then((response) => {
           this.compCombo = JSON.parse(JSON.stringify(response.data));   
           console.log(this.compCombo);       
@@ -287,12 +287,12 @@ axios.get("http://localhost:8080/airline-ticket-shop-backend/api/companies", {
           console.log(error);
         });  
 
-  axios.get("http://localhost:8080/airline-ticket-shop-backend/api/flights", {
-          headers: {
-              "Accept": "application/json",
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + localStorage.jwt
-            },
+    axios.get("http://localhost:8080/airline-ticket-shop-backend/api/flights", {
+      headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.jwt
+          },
         }).then((response) => {
           this.fligCombo = JSON.parse(JSON.stringify(response.data));   
           console.log(this.fligCombo);       
